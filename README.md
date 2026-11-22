@@ -5,7 +5,7 @@ Student number: 2023502030
 
 MIS 233 Web Based Application Programming, Fall 2026, Assignment 4.
 
-Bonuses claimed: **Bonus 2: Depth**, **Bonus 3: Real code**, **Bonus 4: Git repository** (each has its own section near the end).
+Bonuses claimed: **Bonus 2: Depth**, **Bonus 4: Git repository** (each has its own section near the end).
 
 All my examples use one theme: **music**. Songs (title, artist, bpm, year), a playlist with an owner and songs, a play queue, play counts and star ratings.
 
@@ -310,7 +310,7 @@ form 9 (owner is not a variable): owner is not defined
 
 **Use it when:** I need a few values deep inside one object and the structure is fixed and known.
 
-**Watch out:** `owner:` and `songs:` are only **paths**; they do not create variables, so `owner` is not defined. If any level is missing (no `owner` at all) the whole line throws a `TypeError`, because it tries to destructure `undefined` (pitfall 1). Deep patterns quickly become hard to read (see Bonus 3).
+**Watch out:** `owner:` and `songs:` are only **paths**; they do not create variables, so `owner` is not defined. If any level is missing (no `owner` at all) the whole line throws a `TypeError`, because it tries to destructure `undefined` (pitfall 1). Deep patterns quickly become hard to read.
 
 ### Form 10: a computed key, `const { [key]: value } = t`
 
@@ -894,28 +894,6 @@ depth 8 (for...of + entries): Creep 92
 
 `for...in` walks over the **keys** (strings) of an object, so there is nothing to destructure. `for...of` walks over the **values** of an iterable, and `Object.entries` turns the object into `[key, value]` pairs that a pattern can take apart (form 12).
 
-## Bonus 3: Real code
-
-Bonus 3: Real code. Destructuring found in code I did not write: the Assignment 3 Task Manager **starter** (from the course), and the TypeScript compiler, an open-source project that is installed in this project (`node_modules/typescript/lib/_tsc.js`, version 5.8.3).
-
-| # | File and line | Code | Form | Without destructuring |
-| --- | --- | --- | --- | --- |
-| 1 | Assignment 3 starter `src/App.tsx`, line 37 | `const [tasks, dispatch] = useReducer(taskReducer, [])` | 1 | `const pair = useReducer(...); const tasks = pair[0]; const dispatch = pair[1]` |
-| 2 | Assignment 3 starter `src/TaskRow.tsx`, line 5 | `function TaskRow({ task, onNext, onDelete }: TaskRowProps)` | 11 (+5) | `function TaskRow(props: TaskRowProps) { const task = props.task; ... }` |
-| 3 | `node_modules/typescript/lib/_tsc.js`, line 2302 | `const [, major, minor = "0", patch = "0", prerelease = "", build2 = ""] = match;` | 2 and 4 | `const major = match[1]; const minor = match[2] === undefined ? "0" : match[2]; ...` |
-| 4 | `node_modules/typescript/lib/_tsc.js`, line 2260 | `const { major, minor, patch, prerelease, build: build2 } = result;` | 5 and 6 | `const major = result.major; ... const build2 = result.build;` |
-| 5 | `node_modules/typescript/lib/_tsc.js`, line 1450 | `for (const [enumValue, enumName] of members) {` | 12 | `for (const entry of members) { const enumValue = entry[0]; const enumName = entry[1]; ...` |
-| 6 | `node_modules/typescript/lib/_tsc.js`, line 13953 | `const { line: startLine } = getLineAndCharacterOfPosition(sourceFile, node.body.pos);` | 6 | `const startLine = getLineAndCharacterOfPosition(...).line;` |
-| 7 | `node_modules/typescript/lib/_tsc.js`, line 18265 | `const [commonResolved, commonOriginal] = guessDirectorySymlink(...) \|\| emptyArray;` | 1 | `const pair = guessDirectorySymlink(...) \|\| emptyArray; const commonResolved = pair[0]; ...` |
-| 8 | `node_modules/typescript/lib/_tsc.js`, line 19030 | `const { parent: parent3 } = node;` | 6 | `const parent3 = node.parent;` |
-
-**Notes on the cases.**
-
-- Case 3 is a nice real use of forms 2 and 4 together: `match` is the result of a regular expression, whose index 0 is the whole matched text. The empty place at the start skips it, and the defaults (`"0"`, `""`) fill the parts of a version number like `5.8` that are missing (no patch number). Written without destructuring, it would be six lines with six `=== undefined` checks.
-- Case 7 protects itself against pitfall 1: `guessDirectorySymlink` can return `undefined`, and destructuring `undefined` throws, so the code adds `|| emptyArray` to always have something iterable on the right; then both names are just `undefined`.
-- **A case where destructuring makes the code worse: case 8.** `const { parent: parent3 } = node;` saves nothing over `const parent3 = node.parent;`, and the rename to `parent3` (made by the tool that bundled the compiler, because there were other variables called `parent`) hides where the value comes from. Reading `parent3` two lines later, I have to scroll up to learn it is `node.parent`. Case 6 is similar: `getLineAndCharacterOfPosition(...).line` would be as short and needs no rename.
-- **React props case: case 2.** In `TaskRow({ task, onNext, onDelete })`, all three are normal **props**, written as attributes in `App.tsx` (`<TaskRow task={t} onNext={...} onDelete={...} />`). There is **no children** here: `TaskRow` is used as a self-closing tag, and `children` is not even in `TaskRowProps`, so TypeScript would reject content between the tags (like the `TitleOnly` row in P7). The opposite example is in the same starter, `src/main.tsx`, lines 6 to 8: `<StrictMode><App /></StrictMode>`. There `StrictMode` gets **no attributes at all**, and `<App />` is its only prop, `children`.
-
 ## Bonus 4: Git repository
 
 Bonus 4: Git repository
@@ -926,13 +904,13 @@ The repository has a `.gitignore` that leaves out `node_modules` (and the course
 
 ## My own log
 
-Real things that went wrong or surprised me while building this project, with the exact messages.
+Remotable things that failed/arrived unexpectedly during construction of this project, and the messages that were received.
 
-1. **My first T5 did not cause any error.** I wanted the compile error of an empty array: `const [volume = 50] = []` with `// @ts-expect-error` above it. `npm run check` then failed with `error TS2578: Unused '@ts-expect-error' directive.` So the line I expected to be wrong is fine for TypeScript, because the default value covers the missing position. Two things learned: `@ts-expect-error` is safer than an ignore, because it complains when the error disappears; and a default really changes what TypeScript accepts. I used `const [onlyArtist, missingTitle] = ['Coldplay']` instead (TS2493), and kept the empty-array line in `experiments/destructuring-errors.ts` as "no error here".
-2. **The swap without a semicolon is not a syntax error.** I expected the joined lines of pitfall 6 to give a `SyntaxError`, but the result was `ReferenceError - Cannot access 'b' before initialization`. Reading it as one line, `let b = 'Creep'[a, b] = [b, a]`, explains it: `b` is used inside its own declaration. Since I do not use semicolons, every line that starts with `[` or `(` needs a `;` in front, which is why form 3 and pitfall 3 start with `;`.
-3. **A strange error message for `null`.** `makePlaylist(null)` printed `Cannot destructure property 'name' of '(intermediate value)(intermediate value)(intermediate value)' as it is null.` For the same mistake without a parameter default (pitfall 1) the message names the real expression, `'findSong(...)'`. The difference is the `= {}` default: JavaScript evaluates "the argument, or `{}` if it is undefined" as a hidden expression with no name. The useful part of the message is the end, `as it is null`: the `= {}` default did not help, because defaults only work for `undefined`.
-4. **My first pitfall 4 proved nothing.** The first version was `const { owner, ...rest } = library[1]` and then `rest.owner === library[1].owner`, and the output was `pitfall 4: someone-else | false`. `false` looked like "the copy is independent", but it was only because I had taken `owner` out of `rest` with the pattern, so `rest.owner` was `undefined`. The rest object only contains the properties that are **not** named in the pattern. I changed the pattern to take `title` out instead, and then `rest.owner === library[1].owner` is `true`: the nested object is shared.
-5. **React keeps `key` for itself.** In P4 I passed `key="s1"` to a component and printed `props.key`: it was `undefined`, and React wrote `Row: \`key\` is not a prop. Trying to access it will result in \`undefined\` being returned.` So not every JSX attribute ends up in props; to use the id inside the component it needs a second prop with another name.
-6. **Props cannot be changed.** A component that does `props.title = 'Changed title'` crashed with `TypeError - Cannot assign to read only property 'title' of object '#<Object>'`. React freezes the props object in development, so a component can only read props; to change something it needs state. (Destructuring into `let` variables and changing those is fine, because that only changes the local variable, form 5.)
-7. **`0` shows up on the screen.** I expected `{songCount && 'has songs'}` to show nothing when `songCount` is `0`, but the output was `<div>0</div>`. `&&` returns its left side when that is falsy, and React renders numbers, including `0`; only `false`, `null`, `undefined` and `true` render as nothing. `songCount > 0 && ...` would be the correct condition.
-8. **`npm run all > output.txt` misses React's warnings.** The warnings for `key` and for a function as a child appear in the terminal but went to stderr, so I added `2>&1` to get the complete real output into `output.txt`.
+1. I didn't get any error for my first T5. I had the compile error 'const [volume = 50] = []' above the statement and after running 'npm run check', the following error was thrown: Unused '@ts-expect-error' directive. But, the line I didn't expect to be incorrect is okay for TypeScript as a default value overlies the missing position. Two lessons learnt: @ts-expect-error is better than ignoring, since it will complain if the error does not exist; and a default does change what TypeScript will accept. I had written const [onlyArtist, missingTitle] = ['Coldplay'] (TS2493), and left the empty array line in experiments/destructuring-errors.ts as no error here.
+2. A swap (without a semicolon) is not a syntax error. I was thinking the lines of pitfall 6 would give SyntaxError, but it gave ReferenceError - Cannot access 'b' before initialization. Reading it as one line, it reads: Let b = 'Creep'[a, b] = [b, a]—here b is used in its own definition. I don't use semicolons; thus, every line that begins with [ or ( must begin with a semicolon, and that's why form 3 and pitfall 3 begin with a semicolon.
+3. The error "strange error message for null" occurs. makePlaylist(null) printed Cannot destructure property 'name' of '(intermediate value)(intermediate value)(intermediate value)' as it is null. In the case of the same error, but without a parameter default (pitfall 1), the message says, in the text casing, the name of the real expression, 'findSong(...)'. The difference: JavaScript will evaluate "the argument, or {} if it is undefined") as a stealthy argument, not named. The end of the message is useful: due to the absence of default support, the = {} at the end wasn't very useful, however.The end of the message is useful, but defaults are only applied to undefined: the = {} at the end did not help.
+4. My first pitfall 4 was a bust. I tried the first one, const { owner, ...rest } = library[1] and then rest.owner === library[1].owner; but the output was pitfall 4: someone-else | false, which was actually because I had removed the owner from the rest variable, which has undefined owner, not because rest.owner was false. The rest is just the properties which are not part of the pattern. I changed the pattern to use instead-titles, and then the nested object's owner equals library[1].owner is true: the nested object is shared.
+5. React retains its key for itself. Not all JSX attributes show up in props; if you want to use the id in the component it has to have a second prop called something else, otherwise it will return `undefined`.
+6. No props are allowed to be changed. An Object ("#<Object>") that was opened for individual modification changed 'title', which is a read only property. In development React will freeze the props object, meaning that a component can only read a prop, it can't change it. It is safe, just as it is acceptable, to create `let` variables in the destructuring, and to modify these variables (form 5).
+7. 0 shows up on the screen. I thought that the output should be nothing when songCount = 0, but it was `<div>0</div>`; && returns its left side when that's falsy, and React renders out numbers (including 0), but only false, null, undefined, and true render as nothing. songCount > 0 && ... would be the correct condition.
+8. The warnings of React are missing from npm run all > output.txt. The warnings for key and function as a child were not sent to stdout, so I have added 2>&1 to obtain all the real output into output.txt.
