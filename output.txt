@@ -1,0 +1,187 @@
+
+> destructuring-guide@0.0.0 all
+> npm run js && npm run ts
+
+
+> destructuring-guide@0.0.0 js
+> node js/arrays.mjs && node js/objects.mjs && node js/params.mjs && node js/pitfalls.mjs && node js/depth.mjs && tsx js/props.jsx
+
+form 1: 187 356
+form 1 (missing item): 128 undefined
+form 2: Blinding Lights [ 'Levitating', 'As It Was', 'Outro' ]
+form 2 (empty rest): []
+form 2 (spread, not rest): 6
+form 3: As It Was | Levitating
+form 4: Intro Outro
+form 4 (undefined uses the default): party 5
+form 4 (null does not): null
+form 5: Blinding Lights - The Weeknd
+form 5 (variable changed, object did not): Save Your Tears | Blinding Lights
+form 5 (missing property): undefined
+form 6: Blinding Lights 171
+form 6 (old name): bpm is not defined
+form 7: 3 false
+form 7 (real value wins): 2019
+form 7 (null is kept): null
+form 8: s1 {
+  title: 'Blinding Lights',
+  artist: 'The Weeknd',
+  bpm: 171,
+  year: 2019
+}
+form 8 (a new object): true
+form 9: doruk | Blinding Lights | Levitating
+form 9 (owner is not a variable): owner is not defined
+form 10: artist = The Weeknd
+form 10 (in a loop): title = Blinding Lights
+form 10 (in a loop): year = 2019
+form 11: Gym Mix (shuffle: true, max 20)
+form 11 (no argument): undefined (shuffle: false, max 20)
+form 11 (null): Cannot destructure property 'name' of '(intermediate value)(intermediate value)(intermediate value)' as it is null.
+form 11b: Yellow by Coldplay
+form 11b (in map): [ 'Coldplay: Yellow', 'Radiohead: Creep' ]
+form 12: Blinding Lights -> 42
+form 12: Levitating -> 17
+form 12: Yellow -> 8
+form 12 (Map): Creep *****
+form 12 (Map): Yellow ****
+form 12 (array.entries): 0 Intro
+form 12 (array.entries): 1 Outro
+form 12 (objects in a loop): Yellow 87
+form 12 (objects in a loop): Creep 92
+pitfall 1: TypeError - Cannot destructure property 'bpm' of 'findSong(...)' as it is undefined.
+pitfall 2: null | Unknown album
+pitfall 3 (with parentheses): Yellow 87
+pitfall 3 (without): SyntaxError - Unexpected token '='
+pitfall 4: Creep | someone-else | true
+pitfall 5 (object, any order): Yellow 87
+pitfall 5 (array, order matters): Yellow by Coldplay
+pitfall 6: ReferenceError - Cannot access 'b' before initialization
+depth 1 (string): C [ 'r', 'e', 'e', 'p' ]
+depth 1 (Set): rock
+depth 1 (Map): Yellow 87
+depth 2: Symbol.iterator was called
+depth 2: next() call 1
+depth 2: next() call 2
+depth 2: return() was called, the pattern stopped early
+depth 2: got Yellow Creep
+depth 3: playing song 1
+depth 3: got Yellow
+depth 4: TypeError - {(intermediate value)} is not iterable
+depth 5: 87 100 lookups = 1
+depth 6 (earlier name): 30 60
+depth 6 (later name): ReferenceError - Cannot access 'b' before initialization
+depth 7 (catch): SyntaxError - Expected property name or '}' in JSON at position 2 (line 1 column 3)
+depth 7 (assignment targets): { current: 'Yellow', next: 'Creep' }
+depth 8 (for...in): Yellow
+depth 8 (for...in): Creep
+depth 8 (for...of + entries): Yellow 87
+depth 8 (for...of + entries): Creep 92
+P1 A: <article><h3>Yellow</h3><p>Coldplay</p>Parachutes, 2000</article>
+P1 B: <article><h3>Yellow</h3><p>Coldplay</p>Parachutes, 2000</article>
+P1 the props object: { title: 'Yellow', bpm: 87, children: 'Parachutes' }
+P2 between the tags: <span class="tag">indie rock</span>
+P2 as an attribute: <span class="tag">indie rock</span>
+P2 both at once: <span class="tag">from the tags</span>
+P2 no children: <span class="tag"></span>
+P3 string: <div>Creep</div>
+P3 number: <div>92</div>
+P3 zero: <div>0</div>
+P3 one element: <div><b>Creep</b></div>
+P3 several elements: <div><b>Creep</b><i>Radiohead</i></div>
+P3 an array: <div><em>Yellow</em><em>Creep</em></div>
+P3 undefined: <div></div>
+P3 null: <div></div>
+P3 false: <div></div>
+P3 true: <div></div>
+P3 0 && ...: <div>0</div>
+Functions are not valid as a React child. This may happen if you return children instead of <children /> from render. Or maybe you meant to call this function rather than return it.
+P3 a function, nobody calls it: <div></div>
+P3 a function the component calls: <div><span>Creep by Radiohead</span></div>
+P3 an object: Objects are not valid as a React child (found: object with keys {title}). If you meant to render a collection of children, use an array instead.
+P4 rest is: { id: 'gym', 'data-songs': '12' }
+P4 rest goes to <section>: <section class="playlist" id="gym" data-songs="12"><h2>Gym Mix</h2>songs here</section>
+P4 rest is: { className: 'dark' }
+P4 spread after className: <section class="dark"><h2>Gym Mix</h2>songs</section>
+P4 className after spread: <section class="playlist"><h2>Gym Mix</h2>songs</section>
+Row: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://react.dev/link/special-props)
+P4 props.key is: undefined
+P4 key: <li>Yellow</li>
+P5 with header and footer props: <div class="playlist"><header><h2>Sunday Drive</h2></header><ul><li>Yellow</li><li>Creep</li></ul><footer><small>2 songs</small></footer></div>
+P5 with children only: <div class="playlist"><h2>Sunday Drive</h2><ul><li>Yellow</li><li>Creep</li></ul><small>2 songs</small></div>
+P6 prop not given: <span class="gray">New</span>
+P6 undefined: <span class="gray">New</span>
+P6 null: <span class="gray"></span>
+P6 empty string: <span class="gray"></span>
+P7 (JS) a number: <span>****</span>
+P7 (JS) a string: <span></span>
+P7 (JS) missing: <span></span>
+extra: changing props: TypeError - Cannot assign to read only property 'title' of object '#<Object>'
+
+> destructuring-guide@0.0.0 ts
+> tsx ts/arrays.ts && tsx ts/objects.ts && tsx ts/params.ts && tsx ts/types.ts && tsx ts/props.tsx
+
+form 1: 187 356
+form 1 (tuple [string, number]): BLINDING LIGHTS 172
+form 2: Blinding Lights [ 'Levitating', 'As It Was', 'Outro' ]
+form 3: As It Was | Levitating
+form 4: INTRO Outro
+form 4 (undefined uses the default): party medium
+form 5: Blinding Lights - The Weeknd
+form 5 (variable changed, object did not): Save Your Tears | Blinding Lights
+form 6: Blinding Lights 171
+form 7: 3 3.0
+form 8: s1 {
+  title: 'Blinding Lights',
+  artist: 'The Weeknd',
+  bpm: 171,
+  year: 2019
+}
+form 9: doruk | Blinding Lights | Levitating
+form 10: artist = The Weeknd
+form 10 (in a loop): title = Blinding Lights
+form 10 (in a loop): year = 2019
+form 11: Gym Mix (shuffle: true, max 20)
+form 11 (no argument): Untitled (shuffle: false, max 20)
+form 11b: Yellow by Coldplay
+form 11b (in map): [ 'Coldplay: Yellow', 'Radiohead: Creep' ]
+form 12: Blinding Lights -> 42
+form 12: Levitating -> 17
+form 12: Yellow -> 8
+form 12 (Map): Creep *****
+form 12 (Map): Yellow ****
+form 12 (objects in a loop): Yellow 87
+form 12 (objects in a loop): Creep 92
+T1 (the confusion): a variable named string = Creep
+T1 (correct): Creep 92
+T2 (no tuple type): string number
+T2 (tuple): YELLOW 88
+T2 (as const): Yellow 87 2
+T3 (check it): empty queue
+T3 (?? fallback): nothing to play
+T3 (default): NOTHING TO PLAY
+T4 (optional, no default): undefined
+T4 (optional, with default): 1
+T4 (default in a parameter): Creep: ***
+T5 (it still runs, the error is only for the compiler): Coldplay undefined
+T5 (fix 1, give both values): Coldplay Yellow
+T5 (fix 2, a string[] and a default): Coldplay (no title)
+P1 A: <article><h3>Yellow</h3><p>Coldplay</p>Parachutes, 2000</article>
+P1 B: <article><h3>Yellow</h3><p>Coldplay</p>Parachutes, 2000</article>
+P2 between the tags: <span class="tag">indie rock</span>
+P2 as an attribute: <span class="tag">indie rock</span>
+P3 number: <div>92</div>
+P3 several elements: <div><b>Creep</b><i>Radiohead</i></div>
+P3 null: <div></div>
+P3 false: <div></div>
+P3 function children (typed): <div><span>Creep by Radiohead</span></div>
+P4 rest spread: <section class="playlist" id="gym" aria-label="Gym playlist"><h2>Gym Mix</h2>songs here</section>
+P4 spread after className: <section class="dark"><h2>Gym Mix</h2>songs</section>
+P5 slots: <div class="playlist"><header><h2>Sunday Drive</h2></header><ul><li>Yellow</li><li>Creep</li></ul><footer></footer></div>
+P5 children: <div class="playlist"><h2>Sunday Drive</h2><small>2 songs</small></div>
+P6 prop not given: <span class="gray">New</span>
+P6 undefined: <span class="gray">New</span>
+P6 null: <span class="gray"></span>
+P7 (a) children?: ReactNode: <span>**** Yellow</span>
+P7 (b) PropsWithChildren: <section><h2>Sunday Drive</h2>2 songs</section>
+P7 (c) ComponentProps<'button'>: <button type="button" disabled="" title="Play Yellow">▶ Play</button>
